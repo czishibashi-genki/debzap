@@ -14,6 +14,8 @@ import spray.json.DefaultJsonProtocol._
 import scala.io.StdIn
 import scala.concurrent.{ExecutionContextExecutor, ExecutionContext, Future}
 
+import slick.driver.MySQLDriver.api._
+
 object WebServer {
 
   // domain model
@@ -40,6 +42,9 @@ object WebServer {
     implicit val materializer = ActorMaterializer()
     // needed for the future map/flatmap in the end
     implicit val executionContext = system.dispatcher
+
+    val db = Database.forConfig("db")
+
     val route: Route =
       get {
         pathPrefix("item" / LongNumber) { id =>

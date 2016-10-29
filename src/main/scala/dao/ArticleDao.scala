@@ -1,0 +1,67 @@
+package dao
+
+import dao.Query.ArticleQuery
+import org.joda.time.DateTime
+import slick.driver.MySQLDriver.api._
+import com.github.tototoshi.slick.MySQLJodaSupport._
+
+/**
+ * Created by a13887 on 2016/10/29.
+ */
+case class ArticleDto(
+                       id: Option[Int],
+                       title: String,
+                       link: String,
+                       favCount: Int,
+                       siteId: Int,
+                       createdDate: Option[DateTime])
+
+class Articles(tag: Tag) extends Table[ArticleDto](tag, "article") {
+  def id = column[Option[Int]]("id", O.PrimaryKey, O.AutoInc)
+
+  def title = column[String]("title")
+
+  def link = column[String]("link")
+
+  def favCount = column[Int]("fav_count")
+
+  def siteId = column[Int]("site_id")
+
+  def createdDate = column[Option[DateTime]]("created_date")
+
+  def * = (id, title, link, favCount, siteId, createdDate) <>(ArticleDto.tupled, ArticleDto.unapply)
+}
+
+object ArticleDao extends TableQuery(new Articles(_)) with BaseDao {
+
+  /**
+   * 記事の保存
+   * @param dto
+   * @return 新規作成されたID
+   */
+  def insert(dto: ArticleDto) = {
+    db.run(
+      this.returning(this.map(_.id)) += (dto)
+    )
+  }
+
+  def upsert(dto: ArticleDto) = {
+    db.run(
+      this.insertOrUpdate(dto)
+    )
+  }
+
+  def remove(id: Int) = {
+    db.run(
+      this.filter(_.id === id).delete
+    )
+  }
+
+  def find(query: ArticleQuery) = {
+    db.run(
+      this.filter(table =>
+        table.id === query.id
+      ).result
+    )
+  }
+}
