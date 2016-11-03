@@ -11,7 +11,7 @@
 
 |key |説明 |型 |必須 |備考|
 |---|---|---|---|---|
-|sortby|並び順 | string| | created_date:新着順, fav:人気順。デフォ新着|
+|sortby|並び順 | string| | new:新着順, fav:人気順。デフォ新着|
 |offset |オフセット|int | | |
 |count |取得件数 | int | |デフォルト50件 |
 
