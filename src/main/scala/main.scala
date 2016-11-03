@@ -35,8 +35,8 @@ object WebServer extends Directives with JsonSupport{
     val route: Route =
       get {
         pathPrefix("articles") {
-          parameters('offet.as[Int].?, 'count.as[Int].?) { (offsetOpt, countOpt) =>
-            val articles: Future[Seq[ArticleOutput]] = ArticleService.find(offsetOpt, countOpt)
+          parameters('offset.as[Int].?, 'count.as[Int].?, 'sortby.as[String].?) { (offsetOpt, countOpt, sortbyOpt) =>
+            val articles: Future[Seq[ArticleOutput]] = ArticleService.find(offsetOpt, countOpt, sortbyOpt)
             onSuccess(articles) {
               case articles: Seq[ArticleOutput] => complete (articles.toRes)
               case _ => complete(StatusCodes.NotFound)

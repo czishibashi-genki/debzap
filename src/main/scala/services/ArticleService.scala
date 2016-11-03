@@ -2,8 +2,7 @@ package services
 
 import controllers.{ArticleSiteOutput, ArticleOutput}
 import dao.{SiteDao, ArticleDao}
-import dao.Query.{SiteQuery, ArticleQuery}
-import services.Entity.Site
+import dao.Query.{SortingColumn, SiteQuery, ArticleQuery}
 
 import scala.concurrent.{Future, ExecutionContextExecutor}
 
@@ -13,8 +12,8 @@ import scala.concurrent.{Future, ExecutionContextExecutor}
  */
 object ArticleService {
 
-  def find(offsetOpt: Option[Int], countOpt: Option[Int])(implicit context: ExecutionContextExecutor): Future[Seq[ArticleOutput]] = {
-    val aq = ArticleQuery(offset = offsetOpt, count = countOpt)
+  def find(offsetOpt: Option[Int], countOpt: Option[Int], sortbyOpt: Option[String])(implicit context: ExecutionContextExecutor): Future[Seq[ArticleOutput]] = {
+    val aq = ArticleQuery(offset = offsetOpt, count = countOpt, sortby = sortbyOpt.getOrElse(SortingColumn.New.query)).validate()
     val articlesFt = ArticleDao.find(aq)
     val sitesFt = articlesFt.flatMap{ articleSeq =>
       val articleSiteIds = articleSeq.map(_.siteId)

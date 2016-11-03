@@ -1,6 +1,6 @@
 package dao
 
-import dao.Query.ArticleQuery
+import dao.Query.{SortingColumn, ArticleQuery}
 import org.joda.time.DateTime
 import slick.driver.MySQLDriver.api._
 import com.github.tototoshi.slick.MySQLJodaSupport._
@@ -59,14 +59,20 @@ object ArticleDao extends TableQuery(new Articles(_)) with BaseDao {
 
   def find(query: ArticleQuery) = {
     db.run{
-      val act = this.filter{table =>
+      val act1 = this.filter{table =>
         val repTrue: Rep[Option[Boolean]] = Some(true)
         val q = if (query.id.isDefined) (table.id === query.id) else repTrue
         q
       }
+      val act2 = query.sortby match {
+        case SortingColumn.New.column => act1.sortBy(_.createdDate.desc)
+        case SortingColumn.Fav.column => act1.sortBy(_.favCount.desc)
+        case _ => act1
+      }
+
       val offset = query.offset.fold(0)(o => o)
       val count = query.count.fold(1000)(c => c) // デフォルト1000件
-      act.drop(offset).take(count).result
+      act2.drop(offset).take(count).result
     }
   }
 }
