@@ -20,7 +20,7 @@
 |key |説明 |型 |NULLあり|備考 |
 |---|---|---|---|---|
 |total |記事の全件数| Int | YES | |
-|articles |記事一覧 | List | | |
+|values |記事一覧 | List | | |
 |└ id |記事ID |int | | |
 |└ title |タイトル |string | | |
 |└ link |リンクURL |string | | |
