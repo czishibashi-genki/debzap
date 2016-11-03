@@ -35,7 +35,7 @@
 ```
 {
   "total": 200,
-  "articles" [
+  "values" [
     {
       "id": 123,
       "title": "PPAPはすごかった",
