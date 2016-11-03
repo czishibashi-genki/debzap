@@ -58,10 +58,15 @@ object ArticleDao extends TableQuery(new Articles(_)) with BaseDao {
   }
 
   def find(query: ArticleQuery) = {
-    db.run(
-      this.filter(table =>
-        table.id === query.id
-      ).result
-    )
+    db.run{
+      val act = this.filter{table =>
+        val repTrue: Rep[Option[Boolean]] = Some(true)
+        val q = if (query.id.isDefined) (table.id === query.id) else repTrue
+        q
+      }
+      val offset = query.offset.fold(0)(o => o)
+      val count = query.count.fold(1000)(c => c) // デフォルト1000件
+      act.drop(offset).take(count).result
+    }
   }
 }

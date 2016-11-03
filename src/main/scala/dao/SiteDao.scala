@@ -1,9 +1,7 @@
 package dao
 
 import dao.Query.SiteQuery
-import org.joda.time.DateTime
 import slick.driver.MySQLDriver.api._
-import com.github.tototoshi.slick.MySQLJodaSupport._
 
 /**
  * Created by a13887 on 2016/10/29.
@@ -47,9 +45,12 @@ object SiteDao extends TableQuery(new Sites(_)) with BaseDao {
 
   def find(query: SiteQuery) = {
     db.run(
-      this.filter(table =>
-        table.id === query.id
-      ).result
+      this.filter{table =>
+        val repTrue: Rep[Option[Boolean]] = Some(true)
+        val q = if (query.id.isDefined) table.id === query.id else repTrue
+        val q2 = if (query.ids.isDefined) table.id.inSetBind(query.ids.get) else q
+        q2
+      }.result
     )
   }
 }
