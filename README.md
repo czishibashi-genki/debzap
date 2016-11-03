@@ -30,7 +30,7 @@
 |__└ name |リンク元名前 |string | | |
 
 **レスポンス例**
-[GET] /articles?sortby=created_date&offset=10&count=20
+[GET] /articles?sortby=new&offset=10&count=20
 
 ```
 {
