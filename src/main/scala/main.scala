@@ -9,10 +9,12 @@ import akka.stream.ActorMaterializer
 import akka.http.scaladsl.server.{Directives, Route}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.model.StatusCodes
+import com.typesafe.scalalogging.Logger
 import controllers.{ApiPagingOutput, ArticleSiteOutput, ArticleOutput}
 import controllers.OutputFormatter._
 import services.ArticleService
 import spray.json.DefaultJsonProtocol
+import util.LoggerSupport
 import scala.io.StdIn
 import scala.concurrent.Future
 
@@ -22,7 +24,8 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   implicit def ApiPagintOutputFormat = jsonFormat2(ApiPagingOutput[ArticleOutput])
 }
 
-object WebServer extends Directives with JsonSupport{
+object WebServer extends Directives with JsonSupport with LoggerSupport{
+//  val logger = Logger(this.getClass.getName)
 
   def main(args: Array[String]) {
     // needed to run the route
@@ -36,6 +39,7 @@ object WebServer extends Directives with JsonSupport{
       get {
         pathPrefix("articles") {
           parameters('offset.as[Int].?, 'count.as[Int].?, 'sortby.as[String].?) { (offsetOpt, countOpt, sortbyOpt) =>
+            logger.info(s"get articles. offset = $offsetOpt, count = $countOpt, sortby = $sortbyOpt")
             val articles: Future[Seq[ArticleOutput]] = ArticleService.find(offsetOpt, countOpt, sortbyOpt)
             onSuccess(articles) {
               case articles: Seq[ArticleOutput] => complete (articles.toRes)

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="APPLICATION_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/debzap/log/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LoggingDir}history/debug.%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>
+                %date{yyyy-MM-dd HH:mm:ss:SSS} [%20.-20thread] %-5level  %30.30logger{5}#%-30.30method :%4.-4line -> %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="BATCH_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/debzap/log/batch/batch.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LoggingDir}history/batch/debug.%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>
+                %date{yyyy-MM-dd HH:mm:ss:SSS} [%20.-20thread] %-5level  %30.30logger{5}#%-30.30method :%4.-4line -> %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <pattern>%date{yyyy/MM/dd HH:mm:ss:SSS} %.5level - %logger{0}.%.20method %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <root level="INFO">
+        <appender-ref ref="APPLICATION_LOG"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <logger name="BATCH_LOG">
+        <level value="INFO" />
+        <appender-ref ref="BATCH_LOG" />
+    </logger>
+</configuration>
