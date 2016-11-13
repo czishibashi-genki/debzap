@@ -75,4 +75,10 @@ object ArticleDao extends TableQuery(new Articles(_)) with BaseDao {
       act2.drop(offset).take(count).result
     }
   }
+
+  def find(links: Seq[String])= {
+    db.run {
+      this.filter(_.link.inSetBind(links)).result
+    }
+  }
 }
