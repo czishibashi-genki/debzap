@@ -24,8 +24,8 @@
 |└ id |記事ID |int | | |
 |└ title |タイトル |string | | |
 |└ link |リンクURL |string | | |
-|└ created_date|作成日付 |date | |yyyy-MM-ddThh:mm:ss|
-|└ source |リンク元 |object| | |
+|└ createdDate|作成日付 |date | |yyyy-MM-ddThh:mm:ss|
+|└ site |リンク元 |object| | |
 |__└ id |リンク元ID |int | | |
 |__└ name |リンク元名前 |string | | |
 
