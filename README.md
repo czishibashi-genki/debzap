@@ -58,6 +58,7 @@
 
 |key |説明 |型 |必須 |備考|
 |---|---|---|---|---|
+|uuid|ユーザーを識別する一位のID|string|必須||
 
 ### レスポンス
 
@@ -69,7 +70,5 @@
 [POST] /articles/11/favorite
 
 ```
-{
-  "success": true
-}
+{"success": true}
 ```
