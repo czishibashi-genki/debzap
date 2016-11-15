@@ -49,3 +49,27 @@
   ]
 }
 ```
+
+## POST /articles/:articleId/favorite
+
+お気に入りの登録
+
+### JSONパラメータ
+
+|key |説明 |型 |必須 |備考|
+|---|---|---|---|---|
+
+### レスポンス
+
+|key |説明 |型 |NULLあり|備考 |
+|---|---|---|---|---|
+| success | 登録完了か否か | Boolean | | |
+
+**レスポンス例**
+[POST] /articles/11/favorite
+
+```
+{
+  "success": true
+}
+```
