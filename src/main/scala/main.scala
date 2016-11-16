@@ -10,22 +10,27 @@ import akka.http.scaladsl.server.{Directives, Route}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.model.StatusCodes
 import com.typesafe.scalalogging.Logger
-import controllers.{ApiPagingOutput, ArticleSiteOutput, ArticleOutput}
+import controllers.{ApiPagingOutput, ArticleOutput, ArticleSiteOutput}
 import controllers.OutputFormatter._
-import services.ArticleService
+import services.{ArticleService, FavoriteService}
 import spray.json.DefaultJsonProtocol
 import util.LoggerSupport
+
 import scala.io.StdIn
 import scala.concurrent.Future
+
+case class FavoriteInput(uuid: String)
+case class FavoriteOutput(success: Boolean = false)
 
 trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val ArticleSiteOutputFormat = jsonFormat2(ArticleSiteOutput)
   implicit val ArticleOutputFormat = jsonFormat6(ArticleOutput)
+  implicit val FavoriteInputFormat = jsonFormat1(FavoriteInput)
+  implicit val FavoriteOutputFormat = jsonFormat1(FavoriteOutput)
   implicit def ApiPagintOutputFormat = jsonFormat2(ApiPagingOutput[ArticleOutput])
 }
 
 object WebServer extends Directives with JsonSupport with LoggerSupport{
-//  val logger = Logger(this.getClass.getName)
 
   def main(args: Array[String]) {
     // needed to run the route
@@ -47,7 +52,20 @@ object WebServer extends Directives with JsonSupport with LoggerSupport{
             }
           }
         }
-      }
+      } ~
+        post {
+          pathPrefix("articles" / IntNumber / "favorite") { siteId =>
+            entity(as[FavoriteInput]) { input =>
+              logger.info(s"post favorite site_id = $siteId.")
+              val res: Future[Int] = FavoriteService.save(input.uuid, siteId)
+                onSuccess(res) {
+                  case 1 => complete(FavoriteOutput(true))
+                  case _ => complete(FavoriteOutput(false))
+                }
+            }
+          }
+        }
+
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return
