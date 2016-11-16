@@ -24,8 +24,8 @@
 |└ id |記事ID |int | | |
 |└ title |タイトル |string | | |
 |└ link |リンクURL |string | | |
-|└ created_date|作成日付 |date | |yyyy-MM-ddThh:mm:ss|
-|└ source |リンク元 |object| | |
+|└ createdDate|作成日付 |date | |yyyy-MM-ddThh:mm:ss|
+|└ site |リンク元 |object| | |
 |__└ id |リンク元ID |int | | |
 |__└ name |リンク元名前 |string | | |
 
@@ -48,4 +48,27 @@
     }
   ]
 }
+```
+
+## POST /articles/:articleId/favorite
+
+お気に入りの登録
+
+### JSONパラメータ
+
+|key |説明 |型 |必須 |備考|
+|---|---|---|---|---|
+|uuid|ユーザーを識別する一位のID|string|必須||
+
+### レスポンス
+
+|key |説明 |型 |NULLあり|備考 |
+|---|---|---|---|---|
+| success | 登録完了か否か | Boolean | | |
+
+**レスポンス例**
+[POST] /articles/11/favorite
+
+```
+{"success": true}
 ```
